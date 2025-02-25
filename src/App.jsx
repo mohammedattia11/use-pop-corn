@@ -1,4 +1,5 @@
 import { Children, useEffect, useState } from "react";
+import { useDebounce } from 'react-haiku';
 
 const tempMovieData = [
   {
@@ -108,7 +109,7 @@ const Movie = ({ movie }) => {
 
 const MoviesList = ({ movies }) => {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map(movie => (
         <Movie key={movie.imdbID} movie={movie} />
       ))}
@@ -210,7 +211,9 @@ export default function App() {
   const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  
   const key = "3f5c301c";
+  const debouncedValue = useDebounce(query, 700) 
 
   useEffect(function () {
     async function fetchMovies() {
@@ -235,7 +238,7 @@ export default function App() {
       return;
     }
     fetchMovies();
-  },[query]);
+  },[debouncedValue]);
 
   return (
     <>
