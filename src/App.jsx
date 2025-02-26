@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-haiku";
-import NavBar from "./NavBar/NavBar";
-import SearchBar from './NavBar/SearchBar';
-import Logo from './NavBar/Logo';
-import NumResults from './NavBar/NumResults';
-import Main from './Layout/Main';
-import Box from './Layout/Box';
-import MoviesList from './Layout/LeftBox/MoviesList';
-import Summary from './Layout/RightBox/Summary';
-import WatchedMoviesList from './Layout/RightBox/WatchedMoviesList';
-import MovieDetails from './Layout/RightBox/MovieDetails';
+import NavBar from "./Components/NavBar/NavBar";
+import SearchBar from './Components/NavBar/SearchBar';
+import Logo from './Components/NavBar/Logo';
+import NumResults from './Components/NavBar/NumResults';
+import Main from './Components/Layout/Main';
+import Box from './Components/Layout/Box';
+import MoviesList from './Components/Layout/LeftBox/MoviesList';
+import Summary from './Components/Layout/RightBox/Summary';
+import WatchedMoviesList from './Components/Layout/RightBox/WatchedMoviesList';
+import MovieDetails from './Components/Layout/RightBox/MovieDetails';
+import Loader from './Components/Loader';
+import ErrorMessage from './Components/ErrorMessage';
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -57,16 +59,6 @@ const tempWatchedData = [
   },
 ];
 
-const Loader = () => {
-  return <p className="loader">Loading...</p>;
-};
-
-const ErrorMessage = ({ message }) => {
-  return <p className="error">{message} ⛔️</p>;
-};
-
-
-
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
@@ -109,7 +101,6 @@ export default function App() {
     },
     [debouncedValue]
   );
-
   return (
     <>
       <NavBar>
@@ -127,7 +118,7 @@ export default function App() {
         </Box>
         <Box>
           {selectedID ? (
-            <MovieDetails selectedID={selectedID} onResetID={setSelectedID} />
+            <MovieDetails selectedID={selectedID} onResetID={setSelectedID} apiKey = {key} />
           ) : (
             <>
               <Summary watched={watched} />
