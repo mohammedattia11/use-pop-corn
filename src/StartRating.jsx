@@ -17,11 +17,13 @@ const StartRating = ({
   size = 48,
   messages = [],
   className = '',
+  onSetRating
 }) => {
   const [rate, setRate] = useState(0);
   const [tempRating, setTempRating] = useState(0);
   const handleRate = rate => {
     setRate(rate + 1);
+    onSetRating(rate)
   };
   const textStyle = {
     color : color,

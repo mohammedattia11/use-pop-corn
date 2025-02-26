@@ -3,10 +3,20 @@ import StartRating from "../../../StartRating";
 import Loader from "../../Loader";
 import ErrorMessage from "../../ErrorMessage";
 
-const MovieDetails = ({ selectedID, onResetID, apiKey }) => {
+const MovieDetails = ({
+  selectedID,
+  onResetID,
+  apiKey,
+  setWatchedMovie,
+  watched,
+}) => {
   const [error, setError] = useState("");
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [userRating, setUserRating] = useState(0);
+
+  const isWatched = watched.map(movie => movie.imdbID).includes(selectedID);
+  console.log(isWatched);
 
   useEffect(
     function () {
@@ -34,7 +44,7 @@ const MovieDetails = ({ selectedID, onResetID, apiKey }) => {
 
   const {
     Title: title,
-    // Year: year,
+    Year: year,
     Poster: poster,
     Runtime: runtime,
     imdbRating,
@@ -44,6 +54,20 @@ const MovieDetails = ({ selectedID, onResetID, apiKey }) => {
     Director: director,
     Genre: genre,
   } = movie;
+
+  const handleAddMovie = () => {
+    const addedMovie = {
+      imdbID: selectedID,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: Number(runtime.split(" ").at(0)),
+      userRating,
+    };
+    setWatchedMovie(addedMovie);
+    onResetID();
+  };
 
   return (
     <div className="details">
@@ -67,8 +91,23 @@ const MovieDetails = ({ selectedID, onResetID, apiKey }) => {
           </header>
           <section>
             <div className="rating">
-              <StartRating maxRating={10} size={24} />
+              {!isWatched ? (
+                <StartRating
+                  maxRating={10}
+                  size={24}
+                  onSetRating={setUserRating}
+                />
+              ) : (
+                <p style={{ textAlign: "center" }}>
+                  Added to watched movies list 🎉
+                </p>
+              )}
             </div>
+            {userRating > 0 && (
+              <button className="btn-add" onClick={handleAddMovie}>
+                + Add to list
+              </button>
+            )}
             <p>
               <em>{plot}</em>
             </p>

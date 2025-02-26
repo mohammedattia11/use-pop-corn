@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useDebounce } from "react-haiku";
 import NavBar from "./Components/NavBar/NavBar";
-import SearchBar from './Components/NavBar/SearchBar';
-import Logo from './Components/NavBar/Logo';
-import NumResults from './Components/NavBar/NumResults';
-import Main from './Components/Layout/Main';
-import Box from './Components/Layout/Box';
-import MoviesList from './Components/Layout/LeftBox/MoviesList';
-import Summary from './Components/Layout/RightBox/Summary';
-import WatchedMoviesList from './Components/Layout/RightBox/WatchedMoviesList';
-import MovieDetails from './Components/Layout/RightBox/MovieDetails';
-import Loader from './Components/Loader';
-import ErrorMessage from './Components/ErrorMessage';
+import SearchBar from "./Components/NavBar/SearchBar";
+import Logo from "./Components/NavBar/Logo";
+import NumResults from "./Components/NavBar/NumResults";
+import Main from "./Components/Layout/Main";
+import Box from "./Components/Layout/Box";
+import MoviesList from "./Components/Layout/LeftBox/MoviesList";
+import Summary from "./Components/Layout/RightBox/Summary";
+import WatchedMoviesList from "./Components/Layout/RightBox/WatchedMoviesList";
+import MovieDetails from "./Components/Layout/RightBox/MovieDetails";
+import Loader from "./Components/Loader";
+import ErrorMessage from "./Components/ErrorMessage";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -36,33 +36,33 @@ const tempMovieData = [
   },
 ];
 
-const tempWatchedData = [
-  {
-    imdbID: "tt1375666",
-    Title: "Inception",
-    Year: "2010",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-    runtime: 148,
-    imdbRating: 8.8,
-    userRating: 10,
-  },
-  {
-    imdbID: "tt0088763",
-    Title: "Back to the Future",
-    Year: "1985",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-    runtime: 116,
-    imdbRating: 8.5,
-    userRating: 9,
-  },
-];
+// const tempWatchedData = [
+//   {
+//     imdbID: "tt1375666",
+//     Title: "Inception",
+//     Year: "2010",
+//     Poster:
+//       "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+//     runtime: 148,
+//     imdbRating: 8.8,
+//     userRating: 10,
+//   },
+//   {
+//     imdbID: "tt0088763",
+//     Title: "Back to the Future",
+//     Year: "1985",
+//     Poster:
+//       "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
+//     runtime: 116,
+//     imdbRating: 8.5,
+//     userRating: 9,
+//   },
+// ];
 
 export default function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [selectedID, setSelectedID] = useState(null);
@@ -72,6 +72,10 @@ export default function App() {
 
   const handleSelectedID = id => {
     setSelectedID(selectedID => (id === selectedID ? null : id));
+  };
+
+  const handleSetWatchedMovie = movie => {
+    setWatched(watched => [...watched, movie]);
   };
 
   useEffect(
@@ -118,11 +122,17 @@ export default function App() {
         </Box>
         <Box>
           {selectedID ? (
-            <MovieDetails selectedID={selectedID} onResetID={setSelectedID} apiKey = {key} />
+            <MovieDetails
+              selectedID={selectedID}
+              onResetID={setSelectedID}
+              apiKey={key}
+              setWatchedMovie={handleSetWatchedMovie}
+              watched={watched}
+            />
           ) : (
             <>
               <Summary watched={watched} />
-              <WatchedMoviesList watched={watched} />
+              <WatchedMoviesList watched={watched} setWatchedMovie = {setWatched} />
             </>
           )}
         </Box>
