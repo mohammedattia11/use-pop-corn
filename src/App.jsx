@@ -101,10 +101,16 @@ export default function App() {
         setError("");
         return;
       }
+      handleCloseMovie();
       fetchMovies();
     },
     [debouncedValue]
   );
+
+  const handleCloseMovie = () => {
+    setSelectedID(null);
+  };
+
   return (
     <>
       <NavBar>
@@ -124,7 +130,7 @@ export default function App() {
           {selectedID ? (
             <MovieDetails
               selectedID={selectedID}
-              onResetID={setSelectedID}
+              handleCloseMovie={handleCloseMovie}
               apiKey={key}
               setWatchedMovie={handleSetWatchedMovie}
               watched={watched}
@@ -132,7 +138,10 @@ export default function App() {
           ) : (
             <>
               <Summary watched={watched} />
-              <WatchedMoviesList watched={watched} setWatchedMovie = {setWatched} />
+              <WatchedMoviesList
+                watched={watched}
+                setWatchedMovie={setWatched}
+              />
             </>
           )}
         </Box>

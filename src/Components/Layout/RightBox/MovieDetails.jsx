@@ -5,10 +5,10 @@ import ErrorMessage from "../../ErrorMessage";
 
 const MovieDetails = ({
   selectedID,
-  onResetID,
   apiKey,
   setWatchedMovie,
   watched,
+  handleCloseMovie,
 }) => {
   const [error, setError] = useState("");
   const [movie, setMovie] = useState({});
@@ -16,7 +16,6 @@ const MovieDetails = ({
   const [userRating, setUserRating] = useState(0);
 
   const isWatched = watched.map(movie => movie.imdbID).includes(selectedID);
-  console.log(isWatched);
 
   useEffect(
     function () {
@@ -66,8 +65,30 @@ const MovieDetails = ({
       userRating,
     };
     setWatchedMovie(addedMovie);
-    onResetID();
+    handleCloseMovie();
   };
+
+  // change the header title
+
+  useEffect(() => {
+    if (!title) return;
+    document.title = title;
+    return () => {
+      document.title = "usePopcorn";
+    };
+  }, [title]);
+
+  //handle key-press event
+
+  useEffect(() => {
+    const handleEscape = e => {
+      if (e.code === "Escape") handleCloseMovie();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [handleCloseMovie]);
 
   return (
     <div className="details">
@@ -76,7 +97,7 @@ const MovieDetails = ({
       {!isLoading && !error && (
         <>
           <header>
-            <button className="btn-back" onClick={() => onResetID(null)}>
+            <button className="btn-back" onClick={handleCloseMovie}>
               &larr;
             </button>
             <img src={poster} alt={`${title} poster`} />
